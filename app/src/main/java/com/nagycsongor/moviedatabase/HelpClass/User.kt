@@ -1,4 +1,4 @@
-package com.nagycsongor.moviedatabase
+package com.nagycsongor.moviedatabase.HelpClass
 
 class User {
     var email: String? = null

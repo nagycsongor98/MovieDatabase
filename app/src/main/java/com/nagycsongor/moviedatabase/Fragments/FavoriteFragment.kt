@@ -1,4 +1,4 @@
-package com.nagycsongor.moviedatabase
+package com.nagycsongor.moviedatabase.Fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.nagycsongor.moviedatabase.R
 
 class FavoriteFragment : Fragment() {
     val strings: ArrayList<String> = ArrayList()
@@ -31,9 +30,9 @@ class FavoriteFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
-        val mainRecyclerView = view.findViewById(R.id.favoriteRecyclerView) as RecyclerView
-        mainRecyclerView.layoutManager = LinearLayoutManager(context)
-        mainRecyclerView.adapter = FilmAdapter(strings,requireContext())
+//        val mainRecyclerView = view.findViewById(R.id.favoriteRecyclerView) as RecyclerView
+//        mainRecyclerView.layoutManager = LinearLayoutManager(context)
+//        mainRecyclerView.adapter = FilmAdapter(strings,requireContext())
         return view
     }
 

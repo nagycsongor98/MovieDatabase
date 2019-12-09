@@ -1,10 +1,12 @@
-package com.nagycsongor.moviedatabase
+package com.nagycsongor.moviedatabase.Main
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.nagycsongor.moviedatabase.Fragments.*
+import com.nagycsongor.moviedatabase.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
