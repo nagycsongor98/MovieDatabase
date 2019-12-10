@@ -40,6 +40,7 @@ class MainFragment : Fragment() {
                 DividerItemDecoration.VERTICAL)
         )
         mainRecyclerView.layoutManager = LinearLayoutManager(context)
+        getPopularMovies()
         return view
     }
 
@@ -104,7 +105,7 @@ class MainFragment : Fragment() {
                     dataFlight?.enqueue(object : Callback<Json4Kotlin_Base_Movies> {
 
                         override fun onFailure(call: Call<Json4Kotlin_Base_Movies>, t: Throwable) {
-                            Toast.makeText(context, "Error parsing json", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Error please try again", Toast.LENGTH_LONG).show()
                         }
 
                         override fun onResponse(
@@ -138,9 +139,10 @@ class MainFragment : Fragment() {
                     })
 
                 }else{
-                    movies = ArrayList()
-                    mainRecyclerView.adapter =
-                        FilmAdapter(movies, requireContext())
+                    getPopularMovies()
+//                    movies = ArrayList()
+//                    mainRecyclerView.adapter =
+//                        FilmAdapter(movies, requireContext())
                 }
                 return true
             }
@@ -149,10 +151,48 @@ class MainFragment : Fragment() {
 
         searchView.setOnCloseListener(object : SearchView.OnCloseListener{
             override fun onClose(): Boolean {
-                movies = ArrayList()
-                mainRecyclerView.adapter =
-                    FilmAdapter(movies, requireContext())
+//                movies = ArrayList()
+//                mainRecyclerView.adapter =
+//                    FilmAdapter(movies, requireContext())
+                getPopularMovies()
                 return true
+            }
+
+        })
+    }
+
+    private fun getPopularMovies(){
+        movies = ArrayList()
+
+        val service = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
+        val dataFlight = service?.getAllPopular()
+        dataFlight?.enqueue(object : Callback<Json4Kotlin_Base_Movies> {
+            override fun onFailure(call: Call<Json4Kotlin_Base_Movies>, t: Throwable) {
+                Toast.makeText(context, "Error please try again", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<Json4Kotlin_Base_Movies>, response: Response<Json4Kotlin_Base_Movies>) {
+                val body = response.body()
+
+                for (element in body!!.results) {
+                    movies.add(
+                        Movies(
+                            element.title,
+                            element.original_title,
+                            element.overview,
+                            element.poster_path
+                        )
+                    )
+                }
+
+                if (movies.size == 0) {
+                    Toast.makeText(context, "No data to be shown", Toast.LENGTH_SHORT).show()
+                }
+                mainRecyclerView.adapter =
+                    FilmAdapter(
+                        movies,
+                        requireContext()
+                    )
             }
 
         })
