@@ -1,5 +1,7 @@
 package com.nagycsongor.moviedatabase.Main
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,23 +12,24 @@ import com.nagycsongor.moviedatabase.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private var sharedPreferences: SharedPreferences? = null
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item ->
         when(item.itemId){
             R.id.home ->{
-                replaceFragment(MainFragment())
+                replaceFragment(MainFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile ->{
-                replaceFragment(ProfileFragment())
+                replaceFragment(ProfileFragment(bottomNavigationView,sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.favorite ->{
-                replaceFragment(FavoriteFragment())
+                replaceFragment(FavoriteFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.now ->{
-                replaceFragment(NowPlayingFragment())
+                replaceFragment(NowPlayingFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -37,7 +40,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        replaceFragment(LoginFragment(bottomNavigationView))
+        sharedPreferences = getSharedPreferences("com.nagycsongor.moviedatabase", Context.MODE_PRIVATE)
+
+        replaceFragment(LoginFragment(bottomNavigationView,sharedPreferences))
 
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         bottomNavigationView.setTransitionVisibility(View.INVISIBLE)

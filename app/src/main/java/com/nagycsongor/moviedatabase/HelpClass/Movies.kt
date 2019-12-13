@@ -17,12 +17,15 @@ package com.nagycsongor.moviedatabase.HelpClass
 //}
 class Movies{
 
+    var moveId: Int = 0
     var movieName: String = ""
     var movieDetail: String = ""
     var moviePoster: String? = ""
     var movieTitleOriginal: String = ""
     constructor() {}
-    constructor(_movieName: String,_movieOriginalName:String,_movieDetail:String,_poster: String?) {
+    constructor(_moveId: Int,_movieName: String,_movieOriginalName:String,_movieDetail:String,_poster: String?)
+    {
+        this.moveId = _moveId
         this.movieName=_movieName
         this.movieTitleOriginal=_movieOriginalName
         this.movieDetail=_movieDetail

@@ -1,5 +1,7 @@
 package com.nagycsongor.moviedatabase.Fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import com.nagycsongor.moviedatabase.HelpClass.User
+import com.nagycsongor.moviedatabase.Main.MainActivity
 import com.nagycsongor.moviedatabase.R
 import kotlinx.android.synthetic.main.fragment_login.*
 import java.security.MessageDigest
@@ -19,8 +22,11 @@ import java.security.MessageDigest
 class LoginFragment : Fragment {
     var bottomNavigationView: BottomNavigationView? = null
         private set
-    constructor(bottomNavigationView: BottomNavigationView){
+    private var sharedPreferences: SharedPreferences? = null
+    constructor(bottomNavigationView: BottomNavigationView, sharedPreferences: SharedPreferences?){
+        this.sharedPreferences = sharedPreferences
         this.bottomNavigationView = bottomNavigationView
+
     }
     private var database: FirebaseDatabase? = null
     private var reference: DatabaseReference? = null
@@ -35,16 +41,18 @@ class LoginFragment : Fragment {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        //TODO remove this
-        val fragmentTransaction =
-            fragmentManager!!.beginTransaction()
-        fragmentTransaction.replace(
-            R.id.fragment_frameLayout,
-            MainFragment()
-        )
-        fragmentTransaction.commit()
-        bottomNavigationView?.setTransitionVisibility(View.VISIBLE)
-        return view
+        val userId: String? = sharedPreferences?.getString("userId","")
+        if(!userId.equals("")) {
+            val fragmentTransaction =
+                fragmentManager!!.beginTransaction()
+            fragmentTransaction.replace(
+                R.id.fragment_frameLayout,
+                MainFragment(sharedPreferences)
+            )
+            fragmentTransaction.commit()
+            bottomNavigationView?.setTransitionVisibility(View.VISIBLE)
+            return view
+        }
 
         val loginButton = view.findViewById<Button>(R.id.loginButton)
         loginButton.setOnClickListener {
@@ -60,11 +68,14 @@ class LoginFragment : Fragment {
                             User::class.java)
                         if (u != null) {
                             if (u.password?.equals(hashPassword)!!) {
+                                val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+                                editor?.putString("userId",hashEmail)
+                                editor?.apply()
                                 val fragmentTransaction =
                                     fragmentManager!!.beginTransaction()
                                 fragmentTransaction.replace(
                                     R.id.fragment_frameLayout,
-                                    MainFragment()
+                                    MainFragment(sharedPreferences)
                                 )
                                 fragmentTransaction.commit()
                                 bottomNavigationView?.setTransitionVisibility(View.VISIBLE)
@@ -72,6 +83,9 @@ class LoginFragment : Fragment {
                                 Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT).show()
                             }
                         } else {
+                            val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+                            editor?.putString("userId",hashEmail)
+                            editor?.apply()
                             val user =
                                 User(hashEmail, hashPassword)
                             reference!!.child(hashEmail).setValue(user).addOnSuccessListener {
@@ -81,7 +95,7 @@ class LoginFragment : Fragment {
                                 fragmentManager!!.beginTransaction()
                             fragmentTransaction.replace(
                                 R.id.fragment_frameLayout,
-                                MainFragment()
+                                MainFragment(sharedPreferences)
                             )
                             fragmentTransaction.commit()
                             bottomNavigationView?.setTransitionVisibility(View.VISIBLE)

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFF"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            >
+
+        <ImageButton
+                android:id="@+id/fullscreen_dialog_close"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_close_black_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                  app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                  app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                  android:id="@+id/titleTextView"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="23dp"/>
+
+        <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fullscreen_dialog_close" android:layout_marginEnd="8dp"
+                app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+        <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="vertical"
+                android:id="@+id/descriptionTextView" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/webView" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+
+        <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                   android:layout_height="100dp"
+                                                   app:layout_constraintBottom_toBottomOf="parent"
+                                                   android:layout_marginBottom="8dp"
+                                                   app:layout_constraintEnd_toEndOf="parent"
+                                                   app:layout_constraintStart_toStartOf="parent"
+                                                   android:layout_marginStart="8dp"
+                                                   android:layout_marginEnd="8dp"
+                                                   android:id="@+id/recyclerView"></androidx.recyclerview.widget.RecyclerView>
+
+        <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/favoriteImageButton"
+                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                     android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

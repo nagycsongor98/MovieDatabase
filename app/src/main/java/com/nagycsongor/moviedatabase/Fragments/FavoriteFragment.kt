@@ -1,5 +1,6 @@
 package com.nagycsongor.moviedatabase.Fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.nagycsongor.moviedatabase.R
 
-class FavoriteFragment : Fragment() {
+class FavoriteFragment(private val sharedPreferences: SharedPreferences?) : Fragment() {
     val strings: ArrayList<String> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

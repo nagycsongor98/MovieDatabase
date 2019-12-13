@@ -1,19 +1,21 @@
 package com.nagycsongor.moviedatabase.Adapters
 
-import android.R
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.nagycsongor.moviedatabase.Fragments.DetailsDialogFragment
 import com.nagycsongor.moviedatabase.HelpClass.Movies
+import com.nagycsongor.moviedatabase.Main.MainActivity
 import com.squareup.picasso.Picasso
 
 
-class PaginationAdapter (val context: Context) : RecyclerView.Adapter<PaginationAdapter.ViewHolder>() {
+class PaginationAdapter (val context: Context,val sharedPreferences: SharedPreferences?) : RecyclerView.Adapter<PaginationAdapter.ViewHolder>() {
 
     private val ITEM = 0
     private val LOADING = 1
@@ -50,6 +52,11 @@ class PaginationAdapter (val context: Context) : RecyclerView.Adapter<Pagination
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text = movieResults[position].movieName
+        holder.item.setOnClickListener {
+            val detailsDialogFragment =
+                DetailsDialogFragment(movieResults[position],sharedPreferences)
+            detailsDialogFragment.show((context as MainActivity).supportFragmentManager, "PaginationAdapter")
+        }
         try{
             Picasso.with(context)
                 .load("https://image.tmdb.org/t/p/w500/${movieResults[position].moviePoster}")
@@ -118,6 +125,7 @@ class PaginationAdapter (val context: Context) : RecyclerView.Adapter<Pagination
         // Holds the TextView that will add each animal to
         val title: TextView = itemView.findViewById(com.nagycsongor.moviedatabase.R.id.titleTextView)
         val poster: ImageView = itemView.findViewById(com.nagycsongor.moviedatabase.R.id.imageView)
+        val item: ConstraintLayout = itemView.findViewById(com.nagycsongor.moviedatabase.R.id.listItem)
     }
 
 

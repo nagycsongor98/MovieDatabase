@@ -1,23 +1,31 @@
 package com.nagycsongor.moviedatabase.Fragments
 
 import MoviesRespons
+import TrailerRespons
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.*
 import com.nagycsongor.moviedatabase.Adapters.PaginationAdapter
 import com.nagycsongor.moviedatabase.Adapters.PaginationScrollListener
 import com.nagycsongor.moviedatabase.HelpClass.Movies
+import com.nagycsongor.moviedatabase.HelpClass.User
 import com.nagycsongor.moviedatabase.Interfaces.GetMovieList
+import com.nagycsongor.moviedatabase.Main.MainActivity
 import com.nagycsongor.moviedatabase.R
 import com.nagycsongor.moviedatabase.Retrofit.RetrofitMoviesClient
 import retrofit2.Call
@@ -25,7 +33,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fragment() {
+class DetailsDialogFragment(private val movie: Movies,private val sharedPreferences: SharedPreferences?) : DialogFragment() {
+
+    private var database: FirebaseDatabase? = null
+    private var reference: DatabaseReference? = null
+
+    private var isUploaded: Boolean = false
 
     var adapter: PaginationAdapter? = null
     var linearLayoutManager: LinearLayoutManager? = null
@@ -36,29 +49,84 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
     private val PAGE_START = 1
     private var mIsLoading = false
     private var mIsLastPage = false
-    private var TOTAL_PAGES = 20
+    private var TOTAL_PAGES = 5
     private var mCurrentPage = PAGE_START
+    private var key: String = ""
+    private lateinit var favorite:ImageButton
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.hide()
+        setStyle(STYLE_NORMAL, R.style.DialogTheme)
+
+        val userId: String? = sharedPreferences?.getString("userId","")
+
+        database = FirebaseDatabase.getInstance()
+        reference = database!!.getReference("users").child(userId.toString()).child("favorite")
 
 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
+        val view: View = inflater.inflate(R.layout.details_dialog, container, false)
+        val close = view.findViewById<ImageButton>(R.id.fullscreen_dialog_close)
+        close.setOnClickListener { dismiss() }
+        val title = view.findViewById<TextView>(R.id.titleTextView)
+        val description = view.findViewById<TextView>(R.id.descriptionTextView)
+        description.movementMethod = ScrollingMovementMethod()
+        title.text = movie.movieTitleOriginal
+        description.text = movie.movieDetail
+        favorite = view.findViewById(R.id.favoriteImageButton)
+        val ref = reference!!.child(movie.moveId.toString())
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val u: Movies? = dataSnapshot.getValue(Movies::class.java)
+                if (u != null) {
+                    favorite.setBackgroundResource(R.drawable.ic_favorite_black_24dp)
+                    isUploaded = true
+                } else {
+                    favorite.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp)
+                    isUploaded = false
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
 
-        recyclerView = view.findViewById(R.id.nowPlayingRecyclerView) as RecyclerView
-        recyclerView!!.addItemDecoration(
-            DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL)
-        )
+        favorite.setOnClickListener{ upload()}
+
+        val service = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
+        val dataFlight = service?.getTrailer(movie.moveId)
+        dataFlight?.enqueue(object: Callback<TrailerRespons> {
+            override fun onFailure(call: Call<TrailerRespons>, t: Throwable) {
+                Toast.makeText(context, "This film don't have trailer!", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<TrailerRespons>, response: Response<TrailerRespons>) {
+                val body = response.body()
+                for (element in body!!.results) {
+                    key = element.key
+                    if (key.isNotEmpty()) {
+                        break
+                    }
+                }
+                if (key.isNotEmpty()) {
+                    val webView = view.findViewById<View>(R.id.webView) as WebView
+                    webView.webViewClient = object : WebViewClient() {}
+                    webView.settings.javaScriptEnabled = true
+                    webView.loadUrl("https://www.youtube.com/watch?v="+key)
+                }else{
+                    Toast.makeText(context, "This film don't have trailer.", Toast.LENGTH_LONG).show()
+                }
+
+            }
+
+        })
+
+        recyclerView = view.findViewById(R.id.recyclerView) as RecyclerView
 
         adapter = PaginationAdapter(requireContext(),sharedPreferences)
 
-        linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         recyclerView!!.layoutManager = linearLayoutManager
 
         recyclerView!!.itemAnimator = DefaultItemAnimator()
@@ -85,7 +153,23 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
 
         loadFirstPage()
 
+
         return view
+    }
+
+    private fun upload() {
+        if (!isUploaded) {
+            reference!!.child(movie.moveId.toString()).setValue(movie)
+            favorite.setBackgroundResource(R.drawable.ic_favorite_black_24dp)
+            isUploaded = true
+        }else{
+            reference!!.child(movie.moveId.toString()).removeValue()
+            favorite.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp)
+            isUploaded = false
+        }
+
+
+
     }
 
     private fun loadFirstPage() {
