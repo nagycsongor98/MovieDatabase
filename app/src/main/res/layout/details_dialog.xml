@@ -16,8 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="16dp"
-            >
+            android:layout_marginBottom="16dp">
 
         <ImageButton
                 android:id="@+id/fullscreen_dialog_close"
@@ -28,14 +27,14 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
                   app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                   android:id="@+id/titleTextView"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="23dp"/>
+                  android:textColor="@color/colorPrimaryDark"
+                  android:textSize="23dp"/>
 
         <WebView
                 android:id="@+id/webView"
@@ -64,9 +63,8 @@
                                                    android:layout_marginBottom="8dp"
                                                    app:layout_constraintEnd_toEndOf="parent"
                                                    app:layout_constraintStart_toStartOf="parent"
-                                                   android:layout_marginStart="8dp"
-                                                   android:layout_marginEnd="8dp"
-                                                   android:id="@+id/recyclerView"></androidx.recyclerview.widget.RecyclerView>
+                                                   android:id="@+id/recyclerView"
+                                                   android:background="#E8FCFA"/>
 
         <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/favoriteImageButton"
                      app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"

@@ -1,7 +1,7 @@
 import com.google.gson.annotations.SerializedName
 
-data class TrailerRespons (
+data class TrailerRespons(
 
-	@SerializedName("id") val id : Int,
-	@SerializedName("results") val results : List<TrailerResults>
+    @SerializedName("id") val id: Int,
+    @SerializedName("results") val results: List<TrailerResults>
 )

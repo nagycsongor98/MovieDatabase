@@ -14,21 +14,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private var sharedPreferences: SharedPreferences? = null
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item ->
-        when(item.itemId){
-            R.id.home ->{
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.home -> {
                 replaceFragment(MainFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.profile ->{
-                replaceFragment(ProfileFragment(bottomNavigationView,sharedPreferences))
+            R.id.profile -> {
+                replaceFragment(ProfileFragment(bottomNavigationView, sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.favorite ->{
+            R.id.favorite -> {
                 replaceFragment(FavoriteFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.now ->{
+            R.id.now -> {
                 replaceFragment(NowPlayingFragment(sharedPreferences))
                 return@OnNavigationItemSelectedListener true
             }
@@ -42,13 +42,13 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("com.nagycsongor.moviedatabase", Context.MODE_PRIVATE)
 
-        replaceFragment(LoginFragment(bottomNavigationView,sharedPreferences))
+        replaceFragment(LoginFragment(bottomNavigationView, sharedPreferences))
 
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         bottomNavigationView.setTransitionVisibility(View.INVISIBLE)
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_frameLayout, fragment)
         fragmentTransaction.commit()

@@ -30,7 +30,7 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
     var adapter: PaginationAdapter? = null
     var linearLayoutManager: LinearLayoutManager? = null
 
-    private lateinit var movies : ArrayList<Movies>
+    private lateinit var movies: ArrayList<Movies>
     var recyclerView: RecyclerView? = null
 
     private val PAGE_START = 1
@@ -52,11 +52,13 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
 
         recyclerView = view.findViewById(R.id.nowPlayingRecyclerView) as RecyclerView
         recyclerView!!.addItemDecoration(
-            DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL)
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
         )
 
-        adapter = PaginationAdapter(requireContext(),sharedPreferences)
+        adapter = PaginationAdapter(requireContext(), sharedPreferences)
 
         linearLayoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = linearLayoutManager
@@ -66,7 +68,7 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
         recyclerView!!.adapter = adapter
 
 
-        recyclerView!!.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager!!){
+        recyclerView!!.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager!!) {
             override fun loadMoreItems() {
                 mIsLoading = true
                 mCurrentPage += 1
@@ -107,7 +109,8 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
                             element.title,
                             element.original_title,
                             element.overview,
-                            element.poster_path
+                            element.poster_path,
+                            element.release_date
                         )
                     )
                 }
@@ -120,7 +123,7 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
 
     }
 
-    fun loadNextPage(){
+    fun loadNextPage() {
         movies = ArrayList()
         val service = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
         val dataFlight = service?.getNowPlaying(mCurrentPage)
@@ -139,7 +142,8 @@ class NowPlayingFragment(private val sharedPreferences: SharedPreferences?) : Fr
                             element.title,
                             element.original_title,
                             element.overview,
-                            element.poster_path
+                            element.poster_path,
+                            element.release_date
                         )
                     )
                 }

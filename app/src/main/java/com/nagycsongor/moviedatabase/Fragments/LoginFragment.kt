@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +24,13 @@ class LoginFragment : Fragment {
     var bottomNavigationView: BottomNavigationView? = null
         private set
     private var sharedPreferences: SharedPreferences? = null
-    constructor(bottomNavigationView: BottomNavigationView, sharedPreferences: SharedPreferences?){
+
+    constructor(bottomNavigationView: BottomNavigationView, sharedPreferences: SharedPreferences?) {
         this.sharedPreferences = sharedPreferences
         this.bottomNavigationView = bottomNavigationView
 
     }
+
     private var database: FirebaseDatabase? = null
     private var reference: DatabaseReference? = null
 
@@ -41,8 +44,8 @@ class LoginFragment : Fragment {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        val userId: String? = sharedPreferences?.getString("userId","")
-        if(!userId.equals("")) {
+        val userId: String? = sharedPreferences?.getString("userId", "")
+        if (!userId.equals("")) {
             val fragmentTransaction =
                 fragmentManager!!.beginTransaction()
             fragmentTransaction.replace(
@@ -58,6 +61,9 @@ class LoginFragment : Fragment {
         loginButton.setOnClickListener {
             if (TextUtils.isEmpty(emailEditText.text) || TextUtils.isEmpty(passwordEditText.text)) {
                 Toast.makeText(view.context, "Complete all box", Toast.LENGTH_SHORT).show()
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(emailEditText.text).matches()) {
+                emailEditText.error = "Email form not correct!"
+                emailEditText.requestFocus()
             } else {
                 val hashEmail = toHash(emailEditText.text.toString())
                 val hashPassword = toHash(passwordEditText.text.toString())
@@ -65,11 +71,12 @@ class LoginFragment : Fragment {
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val u: User? = dataSnapshot.getValue(
-                            User::class.java)
+                            User::class.java
+                        )
                         if (u != null) {
                             if (u.password?.equals(hashPassword)!!) {
                                 val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-                                editor?.putString("userId",hashEmail)
+                                editor?.putString("userId", hashEmail)
                                 editor?.apply()
                                 val fragmentTransaction =
                                     fragmentManager!!.beginTransaction()
@@ -84,7 +91,7 @@ class LoginFragment : Fragment {
                             }
                         } else {
                             val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-                            editor?.putString("userId",hashEmail)
+                            editor?.putString("userId", hashEmail)
                             editor?.apply()
                             val user =
                                 User(hashEmail, hashPassword)
@@ -101,6 +108,7 @@ class LoginFragment : Fragment {
                             bottomNavigationView?.setTransitionVisibility(View.VISIBLE)
                         }
                     }
+
                     override fun onCancelled(databaseError: DatabaseError) {}
                 })
             }

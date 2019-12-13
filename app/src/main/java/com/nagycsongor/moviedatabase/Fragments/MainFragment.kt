@@ -35,8 +35,8 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
     private var mCurrentPage = PAGE_START
 
 
-    private lateinit var movies : ArrayList<Movies>
-    private lateinit var mainRecyclerView : RecyclerView
+    private lateinit var movies: ArrayList<Movies>
+    private lateinit var mainRecyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.show()
@@ -51,8 +51,10 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
 
         mainRecyclerView = view.findViewById(R.id.mainRecyclerView) as RecyclerView
         mainRecyclerView.addItemDecoration(
-            DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL)
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
         )
 
         getPopularMovies()
@@ -65,14 +67,14 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
 
         val item = menu.findItem(R.id.menuSearch) as MenuItem
         val searchView = item.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 mainRecyclerView.layoutManager = LinearLayoutManager(context)
                 movies = ArrayList()
 
                 val service = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
                 val dataFlight = service?.getAllData(query.toString())
-                dataFlight?.enqueue(object: Callback<MoviesRespons> {
+                dataFlight?.enqueue(object : Callback<MoviesRespons> {
 
                     override fun onFailure(call: Call<MoviesRespons>, t: Throwable) {
                         Toast.makeText(context, "Error parsing json", Toast.LENGTH_LONG).show()
@@ -91,7 +93,8 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                                     element.title,
                                     element.original_title,
                                     element.overview,
-                                    element.poster_path
+                                    element.poster_path,
+                                    element.release_date
                                 )
                             )
                         }
@@ -102,7 +105,7 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                         mainRecyclerView.adapter =
                             FilmAdapter(
                                 movies,
-                                requireContext(),sharedPreferences
+                                requireContext(), sharedPreferences
                             )
 
 
@@ -139,7 +142,8 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                                         element.title,
                                         element.original_title,
                                         element.overview,
-                                        element.poster_path
+                                        element.poster_path,
+                                        element.release_date
                                     )
                                 )
                             }
@@ -150,14 +154,14 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                             mainRecyclerView.adapter =
                                 FilmAdapter(
                                     movies,
-                                    requireContext(),sharedPreferences
+                                    requireContext(), sharedPreferences
                                 )
 
 
                         }
                     })
 
-                }else{
+                } else {
                     getPopularMovies()
 //                    movies = ArrayList()
 //                    mainRecyclerView.adapter =
@@ -168,7 +172,7 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
 
         })
 
-        searchView.setOnCloseListener(object : SearchView.OnCloseListener{
+        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
             override fun onClose(): Boolean {
 //                movies = ArrayList()
 //                mainRecyclerView.adapter =
@@ -180,7 +184,7 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
         })
     }
 
-    private fun getPopularMovies(){
+    private fun getPopularMovies() {
 //        movies = ArrayList()
 //
 //        val service = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
@@ -220,7 +224,7 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
         mIsLastPage = false
         mCurrentPage = PAGE_START
 
-        adapter = PaginationAdapter(requireContext(),sharedPreferences)
+        adapter = PaginationAdapter(requireContext(), sharedPreferences)
 
         linearLayoutManager = LinearLayoutManager(context)
         mainRecyclerView!!.layoutManager = linearLayoutManager
@@ -230,7 +234,7 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
         mainRecyclerView!!.adapter = adapter
 
 
-        mainRecyclerView!!.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager!!){
+        mainRecyclerView!!.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager!!) {
             override fun loadMoreItems() {
                 mIsLoading = true
                 mCurrentPage += 1
@@ -270,7 +274,8 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                             element.title,
                             element.original_title,
                             element.overview,
-                            element.poster_path
+                            element.poster_path,
+                            element.release_date
                         )
                     )
                 }
@@ -302,7 +307,8 @@ class MainFragment(private val sharedPreferences: SharedPreferences?) : Fragment
                             element.title,
                             element.original_title,
                             element.overview,
-                            element.poster_path
+                            element.poster_path,
+                            element.release_date
                         )
                     )
                 }

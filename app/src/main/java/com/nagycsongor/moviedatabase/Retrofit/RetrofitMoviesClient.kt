@@ -9,11 +9,11 @@ object RetrofitMoviesClient {
     private var retrofit: Retrofit? = null
     private val BASE_URL = "https://api.themoviedb.org/3/"
 
-    val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+    val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
     }
 
-    val client : OkHttpClient = OkHttpClient.Builder().apply {
+    val client: OkHttpClient = OkHttpClient.Builder().apply {
         this.addInterceptor(interceptor)
 
     }.build()

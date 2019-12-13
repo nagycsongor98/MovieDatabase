@@ -22,15 +22,16 @@ class Movies{
     var movieDetail: String = ""
     var moviePoster: String? = ""
     var movieTitleOriginal: String = ""
+    var movieReleaseDate: String = ""
     constructor() {}
-    constructor(_moveId: Int,_movieName: String,_movieOriginalName:String,_movieDetail:String,_poster: String?)
+    constructor(_moveId: Int,_movieName: String,_movieOriginalName:String,_movieDetail:String,_poster: String?,_movieReleaseDate: String)
     {
         this.moveId = _moveId
         this.movieName=_movieName
         this.movieTitleOriginal=_movieOriginalName
         this.movieDetail=_movieDetail
         this.moviePoster=_poster
-
+        this.movieReleaseDate = _movieReleaseDate
     }
 
 }

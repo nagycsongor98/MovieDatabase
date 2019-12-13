@@ -13,7 +13,7 @@ interface GetMovieList {
     fun getAllData(@Query("query") user: String): Call<MoviesRespons>
 
     @GET("movie/popular?api_key=ca90ad738881eade27d3b39cd98b9d9a")
-    fun getAllPopular(@Query("page") page: Int):Call<MoviesRespons>
+    fun getAllPopular(@Query("page") page: Int): Call<MoviesRespons>
 
     @GET("movie/now_playing?api_key=ca90ad738881eade27d3b39cd98b9d9a")
     fun getNowPlaying(@Query("page") page: Int): Call<MoviesRespons>
@@ -21,8 +21,8 @@ interface GetMovieList {
     @GET("movie/{movie_id}/videos?api_key=ca90ad738881eade27d3b39cd98b9d9a")
     fun getTrailer(@Path("movie_id") id: Int): Call<TrailerRespons>
 
-
-
+    @GET(" movie/{movie_id}/similar?api_key=ca90ad738881eade27d3b39cd98b9d9a")
+    fun getSimilar(@Path("movie_id") id: Int, @Query("page") page: Int): Call<MoviesRespons>
 
 
 }
