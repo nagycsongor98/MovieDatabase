@@ -1,5 +1,6 @@
 package com.nagycsongor.moviedatabase.Interfaces
 
+import ImageRespons
 import MoviesRespons
 import TrailerRespons
 import retrofit2.Call
@@ -23,6 +24,10 @@ interface GetMovieList {
 
     @GET(" movie/{movie_id}/similar?api_key=ca90ad738881eade27d3b39cd98b9d9a")
     fun getSimilar(@Path("movie_id") id: Int, @Query("page") page: Int): Call<MoviesRespons>
+
+
+    @GET("movie/{movie_id}/images?api_key=ca90ad738881eade27d3b39cd98b9d9a")
+    fun getImiges(@Path("movie_id") id: Int): Call<ImageRespons>
 
 
 }

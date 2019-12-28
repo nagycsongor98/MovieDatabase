@@ -16,7 +16,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0">
 
         <ImageButton
                 android:id="@+id/fullscreen_dialog_close"
@@ -46,29 +47,36 @@
                 app:layout_constraintEnd_toStartOf="@+id/fullscreen_dialog_close" android:layout_marginEnd="8dp"
                 app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
-        <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scrollbars="vertical"
-                android:id="@+id/descriptionTextView" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/webView" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+
+
+        <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/favoriteImageButton"
+                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                     android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="@+id/webView"/>
+
 
         <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                                   android:layout_height="100dp"
+                                                   android:layout_height="60dp"
                                                    app:layout_constraintBottom_toBottomOf="parent"
                                                    android:layout_marginBottom="8dp"
                                                    app:layout_constraintEnd_toEndOf="parent"
                                                    app:layout_constraintStart_toStartOf="parent"
                                                    android:id="@+id/recyclerView"
                                                    android:background="#E8FCFA"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/webView" android:id="@+id/photosRecyclerView"/>
+        <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="160dp" android:id="@+id/descriptionTextView"
+                app:layout_constraintTop_toBottomOf="@+id/photosRecyclerView"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+                android:maxLines="5"
+                android:scrollbars="vertical"/>
 
-        <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/favoriteImageButton"
-                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                     android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

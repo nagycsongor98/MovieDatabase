@@ -66,7 +66,7 @@ class FavoriteFragment(private val sharedPreferences: SharedPreferences?) : Frag
                         mainRecyclerView.adapter =
                             FilmAdapter(
                                 movies,
-                                requireContext()!!, sharedPreferences
+                                requireContext(), sharedPreferences
                             )
                     } catch (e: Exception) {
                     }

@@ -1,5 +1,6 @@
 package com.nagycsongor.moviedatabase.Fragments
 
+import ImageRespons
 import MoviesRespons
 import TrailerRespons
 import android.content.Context
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import com.nagycsongor.moviedatabase.Adapters.ImageAdapter
 import com.nagycsongor.moviedatabase.Adapters.PaginationAdapter
 import com.nagycsongor.moviedatabase.Adapters.PaginationScrollListener
 import com.nagycsongor.moviedatabase.HelpClass.Movies
@@ -46,7 +48,10 @@ class DetailsDialogFragment(private val movie: Movies, private val sharedPrefere
     var linearLayoutManager: LinearLayoutManager? = null
 
     private lateinit var movies: ArrayList<Movies>
+    private lateinit var images: ArrayList<String>
     var recyclerView: RecyclerView? = null
+    var imagesRecyclerView: RecyclerView? = null
+    var imageAdapter: ImageAdapter? = null
 
     private val PAGE_START = 1
     private var mIsLoading = false
@@ -161,6 +166,39 @@ class DetailsDialogFragment(private val movie: Movies, private val sharedPrefere
         })
 
         loadFirstPage()
+
+
+
+
+        imagesRecyclerView = view.findViewById(R.id.photosRecyclerView)
+        imagesRecyclerView!!.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.HORIZONTAL
+            )
+        )
+        imagesRecyclerView!!.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        val service1 = RetrofitMoviesClient.retrofitInstance?.create(GetMovieList::class.java)
+        val dataFlight1 = service1?.getImiges(movie.moveId)
+        dataFlight1?.enqueue(object : Callback<ImageRespons> {
+            override fun onFailure(call: Call<ImageRespons>, t: Throwable) {
+                Toast.makeText(context, "This film don't have photos!", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<ImageRespons>, response: Response<ImageRespons>) {
+                images = ArrayList()
+                val body = response.body()
+                for (element in body!!.backdrops){
+                    images.add(element.file_path)
+                }
+
+
+                imagesRecyclerView!!.adapter  = ImageAdapter(images,requireContext())
+            }
+
+        })
+
 
 
         return view
